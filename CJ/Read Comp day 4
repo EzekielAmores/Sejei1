@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reading Comprehension Game</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Georgia', serif;
+      text-align: center;
+      background: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+      background-color: #f9f3e9;
+      padding: 30px;
+    }
+    h1, h2 {
+      color: #5a3e1b;
+      text-shadow: 1px 1px 0 #fff;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 10px;
+      cursor: pointer;
+      background: #a67c52;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 2px 2px 4px #999;
+    }
+    .hidden { display: none; }
+    .team { margin: 20px; }
+    .character {
+      display: inline-block;
+      margin: 10px;
+      padding: 20px;
+      border: 2px solid #d2b48c;
+      border-radius: 12px;
+      width: 150px;
+      cursor: pointer;
+      background: #fff8dc;
+      box-shadow: 2px 2px 5px #bbb;
+    }
+    .taken {
+      background-color: #d3c5ad;
+      cursor: not-allowed;
+    }
+    #plinkoBoard {
+      position: relative;
+      width: 260px;
+      height: 400px;
+      margin: 20px auto;
+      background: #fff8dc;
+      border: 2px solid #c2a57f;
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px #bbb;
+    }
+    .slot {
+      position: absolute;
+      bottom: 0;
+      width: 52px;
+      height: 40px;
+    }
+    .red { background: #e74c3c; }
+    .blue { background: #3498db; }
+    .yellow { background: #f1c40f; }
+    .green { background: #2ecc71; }
+    .orange { background: #e67e22; }
+    #ball {
+      position: absolute;
+      top: 0;
+      left: 104px;
+      width: 20px;
+      height: 20px;
+      background: black;
+      border-radius: 50%;
+    }
+    #wheel {
+      margin: 0 auto;
+      width: 300px;
+      height: 300px;
+      border: 10px solid #8b5e3c;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 2px 2px 8px #666;
+    }
+    .segment {
+      width: 50%;
+      height: 50%;
+      position: absolute;
+      transform-origin: 100% 100%;
+    }
+    .label {
+      position: absolute;
+      width: 120px;
+      text-align: center;
+      font-size: 14px;
+      color: white;
+      transform: rotate(-45deg);
+      transform-origin: 0 0;
+    }
+  </style>
+</head>
+<body>
+
+
+  <!-- STEP 1: Dice Roll -->
+  <div id="diceSection">
+    <h1>🎲 Roll the Dice to Decide Team Order</h1>
+    <div class="team"><button onclick="rollDice('Team A')">Team A Roll</button> <span id="Team A"></span></div>
+    <div class="team"><button onclick="rollDice('Team B')">Team B Roll</button> <span id="Team B"></span></div>
+    <div class="team"><button onclick="rollDice('Team C')">Team C Roll</button> <span id="Team C"></span></div>
+    <div class="team"><button onclick="rollDice('Team D')">Team D Roll</button> <span id="Team D"></span></div>
+    <div id="diceResults"></div>
+  </div>
+
+  <!-- STEP 2: Character Selection -->
+  <div id="characterSection" class="hidden">
+    <h1>🎭 Choose Your Cartoon Character</h1>
+    <h2 id="turnTitle">Team ?, choose your character:</h2>
+    <div id="characters">
+      <div class="character" onclick="selectCharacter('Pikachu')">⚡ Pikachu</div>
+      <div class="character" onclick="selectCharacter('SpongeBob')">🍍 SpongeBob</div>
+      <div class="character" onclick="selectCharacter('Doraemon')">🤖 Doraemon</div>
+      <div class="character" onclick="selectCharacter('Elsa')">❄️ Elsa</div>
+    </div>
+    <ul id="selectionSummary"></ul>
+  </div>
+
+  <!-- STEP 3: Plinko Drop -->
+  <div id="plinkoSection" class="hidden">
+    <h1>🪩 Plinko Ball Drop</h1>
+    <div id="plinkoBoard">
+      <div id="ball"></div>
+      <div class="slot red" style="left: 0px;"></div>
+      <div class="slot blue" style="left: 52px;"></div>
+      <div class="slot yellow" style="left: 104px;"></div>
+      <div class="slot green" style="left: 156px;"></div>
+      <div class="slot orange" style="left: 208px;"></div>
+    </div>
+    <button onclick="dropBall()">Drop Ball</button>
+    <div id="plinkoResult"></div>
+  </div>
+
+  <!-- STEP 4: Color Wheel + Story -->
+  <div id="wheelSection" class="hidden">
+    <h1>🎡 Spin the Wheel to Get Your Story</h1>
+    <div id="wheel"></div>
+    <button onclick="spinWheel()">Spin</button>
+    <div id="storyResult"></div>
+  </div>
+
+  <!-- STEP 5: Story Reading -->
+  <div id="storySection" class="hidden">
+    <h1>📖 Story</h1>
+    <p id="storyText"></p>
+    <h2 id="timer">Time left: 60s</h2>
+  </div>
+
+  <script>
+    // STEP 1: Dice Roll
+    const rolls = {};
+    let teamOrder = [];
+
+    function rollDice(team) {
+      if (rolls[team]) return alert(team + " already rolled!");
+      const roll = Math.floor(Math.random() * 6) + 1;
+      rolls[team] = roll;
+      document.getElementById(team).innerText = " rolled: " + roll;
+
+      if (Object.keys(rolls).length === 4) {
+        teamOrder = Object.entries(rolls).sort((a, b) => a[1] - b[1]).map(item => item[0]);
+        let order = "<h2>📝 Play Order:</h2><ol>";
+        teamOrder.forEach(t => order += `<li>${t}</li>`);
+        order += "</ol>";
+        document.getElementById("diceResults").innerHTML = order;
+        setTimeout(() => {
+          document.getElementById('diceSection').classList.add('hidden');
+          document.getElementById('characterSection').classList.remove('hidden');
+          document.getElementById('turnTitle').textContent = `${teamOrder[0]}, choose your character:`;
+        }, 2000);
+      }
+    }
+
+    // STEP 2: Character Selection
+    const selections = {};
+    let currentIndex = 0;
+
+    function selectCharacter(character) {
+      const divs = document.querySelectorAll('.character');
+      const selectedDiv = Array.from(divs).find(div => div.textContent.includes(character));
+      if (selectedDiv.classList.contains('taken')) return;
+
+      const team = teamOrder[currentIndex];
+      selections[team] = character;
+      selectedDiv.classList.add('taken');
+      selectedDiv.onclick = null;
+
+      const list = document.getElementById('selectionSummary');
+      const li = document.createElement('li');
+      li.textContent = `${team} chose ${character}`;
+      list.appendChild(li);
+
+      currentIndex++;
+      if (currentIndex < teamOrder.length) {
+        document.getElementById('turnTitle').textContent = `${teamOrder[currentIndex]}, choose your character:`;
+      } else {
+        setTimeout(() => {
+          document.getElementById('characterSection').classList.add('hidden');
+          document.getElementById('plinkoSection').classList.remove('hidden');
+        }, 1500);
+      }
+    }
+
+    // STEP 3: Plinko
+    function dropBall() {
+      const ball = document.getElementById('ball');
+      let top = 0, left = 104;
+
+      const interval = setInterval(() => {
+        top += 20;
+        const direction = Math.random() < 0.5 ? -1 : 1;
+        left += direction * 20;
+        left = Math.max(0, Math.min(left, 240));
+        ball.style.top = top + 'px';
+        ball.style.left = left + 'px';
+
+        if (top >= 360) {
+          clearInterval(interval);
+          const slotIndex = Math.floor(left / 52);
+          const colorNames = ['Red', 'Blue', 'Yellow', 'Green', 'Orange'];
+          const landedColor = colorNames[slotIndex];
+          document.getElementById('plinkoResult').innerHTML = `<strong>Ball landed on: ${landedColor}</strong>`;
+          setTimeout(() => showWheel(landedColor), 2000);
+        }
+      }, 150);
+    }
+
+    // STEP 4: Wheel and Story Picker
+    const storySets = {
+      Red: ['Fire Drill', 'Angry Ant', 'Volcano Visit'],
+      Blue: ['Under the Sea', 'The Blue Whale', 'Ocean Clue'],
+      Yellow: ['The Banana Thief', 'Sunny Day', 'Lost Sandals'],
+      Green: ['Forest Walk', 'Eco Heroes', 'Garden Puzzle'],
+      Orange: ['Pumpkin Tale', 'Sunset Race', 'Orange Planet']
+    };
+
+    function showWheel(color) {
+      document.getElementById('plinkoSection').classList.add('hidden');
+      document.getElementById('wheelSection').classList.remove('hidden');
+
+      const wheel = document.getElementById('wheel');
+      wheel.innerHTML = ''; // Clear previous
+
+      const stories = storySets[color];
+      const colors = {
+        Red: '#e74c3c', Blue: '#3498db',
+        Yellow: '#f1c40f', Green: '#2ecc71', Orange: '#e67e22'
+      };
+
+      stories.forEach((story, i) => {
+        const seg = document.createElement('div');
+        const angle = 360 / stories.length * i;
+        seg.className = 'segment';
+        seg.style.background = colors[color];
+        seg.style.transform = `rotate(${angle}deg) skewY(-60deg)`;
+        seg.innerHTML = `<div class="label" style="top:20px; left:120px;">${story}</div>`;
+        wheel.appendChild(seg);
+      });
+
+      window.currentStories = stories;
+    }
+
+    function spinWheel() {
+      const wheel = document.getElementById('wheel');
+      const spinDeg = Math.floor(Math.random() * 360) + 1080;
+      wheel.style.transition = 'transform 4s ease-out';
+      wheel.style.transform = `rotate(${spinDeg}deg)`;
+
+      const stories = window.currentStories;
+      const index = Math.floor((360 - (spinDeg % 360)) / (360 / stories.length)) % stories.length;
+      const chosenStory = stories[index];
+
+      setTimeout(() => {
+        document.getElementById('storyResult').innerHTML = `📖 Selected Story: <strong>${chosenStory}</strong>`;
+        setTimeout(() => showStory(chosenStory), 3000);
+      }, 4200);
+    }
+
+    // STEP 5: Show Story + Timer
+    function showStory(title) {
+      document.getElementById('wheelSection').classList.add('hidden');
+      document.getElementById('storySection').classList.remove('hidden');
+      document.getElementById('storyText').innerText = `"${title}" - This is a short story about ${title.toLowerCase()}.`;
+
+      let seconds = 60;
+      const timer = document.getElementById('timer');
+      const interval = setInterval(() => {
+        seconds--;
+        timer.textContent = `Time left: ${seconds}s`;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          alert("⏱️ Time's up! Questions will appear next.");
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
