@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plinko Ball Drop</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Georgia', serif;
+      text-align: center;
+      background: #fef9f0;
+      padding: 30px;
+    }
+    h1, h2 {
+      color: #5a3e1b;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 10px;
+      cursor: pointer;
+      background: #a67c52;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 2px 2px 4px #999;
+    }
+    #plinkoBoard {
+      position: relative;
+      width: 260px;
+      height: 420px;
+      margin: 20px auto;
+      background: #fff8dc;
+      border: 2px solid #c2a57f;
+      border-radius: 10px;
+    }
+    .slot {
+      position: absolute;
+      bottom: 0;
+      width: 52px;
+      height: 40px;
+      border-left: 2px solid #5a3e1b;
+      border-right: 2px solid #5a3e1b;
+    }
+    .red    { background: #e74c3c;   left: 0; }
+    .blue   { background: #3498db;   left: 52px; }
+    .yellow { background: #f1c40f;   left: 104px; }
+    .green  { background: #2ecc71;   left: 156px; }
+    .orange { background: #e67e22;   left: 208px; border-right: none; }
+
+    .peg {
+      width: 6px;
+      height: 6px;
+      background: #5a3e1b;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    #ball {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: black;
+      border-radius: 50%;
+      top: 0;
+      left: 110px;
+      z-index: 2;
+    }
+
+    #resultsList {
+      margin-top: 20px;
+      text-align: left;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #fff8dc;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #c2a57f;
+      box-shadow: 2px 2px 4px #bbb;
+    }
+  </style>
+</head>
+<body>
+  <h1>Plinko Ball Drop</h1>
+
+  <label for="teamSelect">Select Team:</label>
+  <select id="teamSelect">
+    <option value="A">Team A</option>
+    <option value="B">Team B</option>
+    <option value="C">Team C</option>
+    <option value="D">Team D</option>
+  </select>
+
+  <div id="plinkoBoard">
+    <div class="slot red"></div>
+    <div class="slot blue"></div>
+    <div class="slot yellow"></div>
+    <div class="slot green"></div>
+    <div class="slot orange"></div>
+    <div id="ball"></div>
+  </div>
+
+  <button onclick="dropBall()">Drop Ball</button>
+
+  <div id="plinkoResult"></div>
+  <div id="resultsList"></div>
+
+  <script>
+    const board = document.getElementById("plinkoBoard");
+    const ball = document.getElementById("ball");
+    const resultText = document.getElementById("plinkoResult");
+    const resultsList = document.getElementById("resultsList");
+    const teamSelect = document.getElementById("teamSelect");
+    const results = {};
+
+    // Generate pegs in grid pattern
+    function generatePegs() {
+      for (let row = 1; row <= 6; row++) {
+        let offset = (row % 2 === 0) ? 20 : 0;
+        for (let col = 0; col < 5; col++) {
+          const peg = document.createElement("div");
+          peg.className = "peg";
+          peg.style.top = `${row * 50}px`;
+          peg.style.left = `${col * 52 + offset + 20}px`;
+          board.appendChild(peg);
+        }
+      }
+    }
+
+    generatePegs();
+
+    function dropBall() {
+      let left = 110;
+      let top = 0;
+      ball.style.left = left + "px";
+      ball.style.top = top + "px";
+
+      const interval = setInterval(() => {
+        top += 8;
+
+        // Simulate bouncing on peg rows
+        if (top % 50 < 10) {
+          left += Math.random() > 0.5 ? 8 : -8;
+        }
+
+        // Keep ball within bounds
+        if (left < 0) left = 0;
+        if (left > 248) left = 248;
+
+        ball.style.top = top + "px";
+        ball.style.left = left + "px";
+
+        if (top >= 400) {
+          clearInterval(interval);
+
+          let slot = Math.floor(left / 52);
+          slot = Math.max(0, Math.min(4, slot)); // clamp between 0 and 4
+
+          const colors = ["Red", "Blue", "Yellow", "Green", "Orange"];
+          const landedColor = colors[slot] || "Unknown";
+
+          const team = teamSelect.value;
+          results[team] = landedColor;
+
+          resultText.innerText = `${team} landed on ${landedColor}!`;
+          updateResultsDisplay();
+        }
+      }, 50);
+    }
+
+    function updateResultsDisplay() {
+      let output = '<h3>Team Results:</h3><ul>';
+      for (let team of ["A", "B", "C", "D"]) {
+        if (results[team]) {
+          output += `<li><strong>Team ${team}</strong> landed on ${results[team]}</li>`;
+        }
+      }
+      output += '</ul>';
+      resultsList.innerHTML = output;
+    }
+  </script>
+</body>
+</html>
