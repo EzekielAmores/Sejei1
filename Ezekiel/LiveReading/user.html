@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><title>User Panel</title></head>
+<body>
+  <h2>User Panel</h2>
+  <button onclick="sendAction()">Do something</button>
+
+  <script>
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onopen = () => {
+      socket.send(JSON.stringify({ role: 'user', user: 'User1' }));
+    };
+
+    function sendAction() {
+      socket.send(JSON.stringify({
+        user: 'User1',
+        action: 'Clicked the button'
+      }));
+      alert("You did something!");
+    }
+  </script>
+</body>
+</html>

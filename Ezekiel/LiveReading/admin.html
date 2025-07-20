@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><title>Admin Panel</title></head>
+<body>
+  <h2>Admin Panel</h2>
+  <div id="log"></div>
+
+  <script>
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onopen = () => {
+      socket.send(JSON.stringify({ role: 'admin' }));
+    };
+
+    socket.onmessage = event => {
+      const data = JSON.parse(event.data);
+      const log = document.getElementById('log');
+      const entry = document.createElement('p');
+      entry.textContent = `${data.timestamp} | ${data.user}: ${data.action}`;
+      log.prepend(entry);
+    };
+  </script>
+</body>
+</html>
