@@ -1,0 +1,53 @@
+<div>Ready: <span id="readyCount">0 of 4 users ready</span></div>
+<p>Ready Users: <span id="readyCount">0</span></p>
+<div id="log"></div>
+
+<div id="admin-log"></div>
+
+<p id="ready-status">Waiting for players...</p>
+<p id="game-status"></p>
+
+<script>
+  const ws = new WebSocket('ws://localhost:8080');
+  ws.onmessage = event => {
+      console.log('Admin received message', event.data);
+      const msg = JSON.parse(event.data);
+
+    if (msg.type === 'ready_count') {
+        console.log('Updating ready count to', msg.data.count);
+      document.getElementById('readyCount').textContent = `${msg.data.count} of 4 users ready`;
+
+      document.getElementById('readyCount').innerText = msg.data.count;
+
+      document.getElementById('ready-status').textContent =
+      `Ready players: ${msg.data.count}/4`;
+    }
+
+    if (msg.type === 'game_start') {
+        document.getElementById('game-status').textContent =
+        msg.data.message;
+    }
+
+    if (msg.type === 'clicked') {
+      const log = document.getElementById('log');
+      log.prepend(document.createElement('p')).textContent = `${msg.data.user} clicked`;
+
+      console.log(`${msg.data.user} clicked.`);
+
+      const logs = document.createElement('p');
+        logs.textContent = `${msg.data.user} clicked!`;
+        document.appendChild(logs);
+    }
+    if (msg.type === 'teams_update') {
+        console.log('Updated teams:', msg.data);
+    }
+
+    // if player clicked from client > server > admin
+    if (msg.type === 'player_clicked') {
+        console.log("I'VE RECIEVED THE MESSAGE");
+        const { user, team_id } = msg.data;
+        const log = document.getElementById('admin-log');
+        log.innerHTML += `<p><strong>${user}</strong> from Team ${team_id} clicked!</p>`;
+    }
+  };
+</script>

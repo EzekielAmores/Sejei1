@@ -1,0 +1,57 @@
+<button id="ready-btn">I'm Ready</button>
+<button id="click-btn" disabled>Click!</button>
+
+<script>
+  const ws = new WebSocket('ws://localhost:8080');
+  ws.onopen = () => {
+    ws.send(JSON.stringify({ type: 'ready' }));
+    console.log('Sent ready signal');
+
+    // idk
+    socket.send(JSON.stringify({
+        type: 'identify',
+        username: session.username,
+        role: session.role,
+        team_id: session.team_id,
+        position: session.position // ✅ ADD THIS
+    }));
+  }
+  ws.onmessage = event => {
+    const msg = JSON.parse(event.data);
+
+    if (msg.type === 'update_position_and_privilege') {
+      // Show/hide button based on server data
+    }
+    if (msg.type === 'clicked') {
+      // Optionally notify user
+    }
+
+    if (msg.type === 'button_enabled') {
+        // Enable the click button for the first player
+        document.getElementById('click-btn').disabled = false;
+        alert(msg.data.message); // optional
+    }
+
+    if (msg.type === 'teams_update') {
+        updateTeamDisplay(msg.data); // you'll define this to show new team state
+    }
+  };
+
+  function clickButton() {
+    ws.send(JSON.stringify({ type: 'click' }));
+  }
+
+  document.getElementById('ready-btn').onclick = () => {
+    // alert('Button clicked!');
+    console.log("ready ready");
+    document.getElementById('ready-btn').disabled = true;
+    ws.send(JSON.stringify({ type: 'ready' }));
+    };
+
+    document.getElementById('click-btn').onclick = () => {
+    // alert('Button clicked!');
+    console.log("click click");
+    ws.send(JSON.stringify({ type: 'click' }));
+    document.getElementById('click-btn').disabled = true; // disable after one use
+    };
+</script>
