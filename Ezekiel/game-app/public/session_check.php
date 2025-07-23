@@ -15,7 +15,7 @@ try {
 
     $stmt = $pdo->prepare("
         SELECT 
-            a.username, a.role, a.logged_in, 
+            a.id AS user_id, a.username, a.role, a.logged_in, 
             t.team_id, t.position
         FROM 
             accounts a

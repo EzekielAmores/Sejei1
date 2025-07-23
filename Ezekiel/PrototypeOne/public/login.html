@@ -1,0 +1,56 @@
+<!-- Handles the log in -->
+ <!-- <form method="POST"> -->
+    <!-- It's not a name fuck, it's an id -->
+     <!-- <input id="username" required placeholder="Username"><br> -->
+     <!-- <input id="password" type="password" required placeholder="Password"><br> -->
+     <!-- <button onclick="loginUser()">LOG IN</button> -->
+ <!-- </form> -->
+
+<input id="username" required placeholder="Username"><br>
+<input id="password" type="password" required placeholder="Password"><br>
+<button onclick="loginUser()">LOG IN</button>
+
+<script>
+    let ws; // Websocket 
+    let username; // Client
+
+    function loginUser() {
+        console.log("running");
+        fetch('../backend/login.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value // NOTE: get element by ID not NAME
+            })
+        }).then(res => res.json())
+            .then(data => {
+            if (data.success) {
+                username = data.username;
+                alert("Logged in");
+                // Attempts to Connect to Node.js Server
+                // connectSocket(username);
+            } else {
+                alert(data.error);
+            }
+        });
+        console.log("successfully ran");
+    }
+
+    // Function to connect to Node.js Server
+    function connectSocket(username) {
+        ws = new WebSocket('ws://localhost:8080');
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'login', username }));
+            // redirect to game without losing the session, but how?
+            // username go to next file
+        };
+
+        window.addEventListener('beforeunload', () => {
+            if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'logout', username }));
+            }
+            navigator.sendBeacon('../backend/logout.php'); // fallback server logout
+        });
+    }
+</script>

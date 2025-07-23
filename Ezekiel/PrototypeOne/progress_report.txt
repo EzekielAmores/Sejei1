@@ -1,0 +1,3 @@
+when using input then getting get element by id, you MUST use id.
+
+make sure that the php file directory is correct

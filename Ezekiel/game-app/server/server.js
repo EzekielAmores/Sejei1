@@ -7,6 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+// Connected Clients
 let clients = []; // { ws, username, role, team_id, ready }
 
 const REQUIRED_USERS = 4;
@@ -140,13 +141,22 @@ async function handleMessage(ws, data) {
         console.log('Server.js:146 Sent swap request for team_id:', sender.team_id);
 
         if (res.data.success) {
-            console.log('Server.js:149 success');
-        // Notify all clients and admin of the update
-        // You might also want to fetch new team state and send it
-        io.emit('position_updated', {
+          console.log('Server.js:149 success');
+          // Notify all clients and admin of the update
+          // You might also want to fetch new team state and send it
+          // io.emit('position_updated', {
+          //     team_id: sender.team_id,
+          //     message: `Team ${sender.team_id} rotated turns`
+          // });
+
+          // Inside your WebSocket 'swapPosition' handling
+          const teamMembers = await getTeamMembers(sender.team_id); // Fetch updated team members from DB
+
+          // Broadcast updated team to all clients in that team
+          io.to(`team_${sender.team_id}`).emit('positionUpdate', {
             team_id: sender.team_id,
-            message: `Team ${sender.team_id} rotated turns`
-        });
+            members: teamMembers
+          });
         }
     } catch (err) {
         console.error('Swap failed:', err.message);
@@ -217,6 +227,14 @@ function startGame() {
 
   // Notify admin that game started
   broadcastToAdmin('game_start', { message: 'All players ready. Game started!' });
+}
+
+async function getTeamMembers(team_id) {
+  const [rows] = await db.execute(
+    'SELECT user_id, position FROM team_members WHERE team_id = ?',
+    [team_id]
+  );
+  return rows;
 }
 
 server.listen(8080, () => {

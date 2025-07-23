@@ -2,6 +2,7 @@
 <button id="click-btn" disabled>Click!</button>
 
 <script>
+  // Connect to WebSocket server
   const ws = new WebSocket('ws://localhost:8080');
   ws.onopen = () => {
     ws.send(JSON.stringify({ type: 'ready' }));
@@ -34,6 +35,24 @@
 
     if (msg.type === 'teams_update') {
         updateTeamDisplay(msg.data); // you'll define this to show new team state
+    }
+
+    if (msg.type === 'positionUpdate') {
+      const myId = session.user_id; // Make sure session.user_id exists
+      const myInfo = msg.members.find(member => member.user_id == myId);
+
+      if (myInfo) {
+        session.position = myInfo.position;
+
+        // Enable or disable click button
+        if (myInfo.position == 1) {
+          document.getElementById('click-btn').disabled = false;
+        } else {
+          document.getElementById('click-btn').disabled = true;
+        }
+
+        console.log(`Updated position: ${myInfo.position}`);
+      }
     }
   };
 

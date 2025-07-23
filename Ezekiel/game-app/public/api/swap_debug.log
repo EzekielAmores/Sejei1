@@ -1,0 +1,36 @@
+Raw input: {"team_id":2}
+Fetched players: [{"user_id":4,"position":1},{"user_id":5,"position":2}]
+Rotated: [2,1]
+Updated user_id 4 to position 2
+Updated user_id 5 to position 1
+Raw input: {"team_id":2}
+Fetched players: [{"user_id":5,"position":1},{"user_id":4,"position":2}]
+Rotated: [2,1]
+Updated user_id 5 to position 2
+Updated user_id 4 to position 1
+Raw input: 
+Raw input: {"team_id":1}
+Fetched players: [{"user_id":2,"position":1},{"user_id":3,"position":2}]
+Rotated: [2,1]
+Updated user_id 2 to position 2
+Updated user_id 3 to position 1
+Raw input: {"team_id":2}
+Fetched players: [{"user_id":4,"position":1},{"user_id":5,"position":2}]
+Rotated: [2,1]
+Updated user_id 4 to position 2
+Updated user_id 5 to position 1
+Raw input: {"team_id":2}
+Fetched players: [{"user_id":5,"position":1},{"user_id":4,"position":2}]
+Rotated: [2,1]
+Updated user_id 5 to position 2
+Updated user_id 4 to position 1
+Raw input: {"team_id":2}
+Fetched players: [{"user_id":4,"position":1},{"user_id":5,"position":2}]
+Rotated: [2,1]
+Updated user_id 4 to position 2
+Updated user_id 5 to position 1
+Raw input: {"team_id":2}
+Fetched players: [{"user_id":5,"position":1},{"user_id":4,"position":2}]
+Rotated: [2,1]
+Updated user_id 5 to position 2
+Updated user_id 4 to position 1

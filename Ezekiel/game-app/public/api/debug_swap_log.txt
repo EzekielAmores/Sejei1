@@ -1,1 +1,4 @@
-{"team_id":1}
+Start swapping
+Fetched players: [{"user_id":2,"position":1},{"user_id":3,"position":2}]
+Swapping positions: user 2 (1) <-> user 3 (2)
+Positions updated successfully
