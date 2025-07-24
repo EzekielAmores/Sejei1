@@ -12,7 +12,8 @@
 
 <script>
     let ws; // Websocket 
-    let username; // Client
+    let username; // Client, Need to be transfer to new page
+    let role;
 
     function loginUser() {
         console.log("running");
@@ -22,14 +23,17 @@
             body: new URLSearchParams({
                 username: document.getElementById('username').value,
                 password: document.getElementById('password').value // NOTE: get element by ID not NAME
-            })
+            }),
+            credentials: 'include' // Need Credentials
         }).then(res => res.json())
             .then(data => {
             if (data.success) {
-                username = data.username;
-                alert("Logged in");
+                // Change username
+                username = data.username; // Not needed
+                role = data.role;
+                
                 // Attempts to Connect to Node.js Server
-                // connectSocket(username);
+                connectSocket(username);
             } else {
                 alert(data.error);
             }
@@ -41,16 +45,34 @@
     function connectSocket(username) {
         ws = new WebSocket('ws://localhost:8080');
         ws.onopen = () => {
-            ws.send(JSON.stringify({ type: 'login', username }));
             // redirect to game without losing the session, but how?
+
             // username go to next file
+            redirect(ws)
         };
 
-        window.addEventListener('beforeunload', () => {
-            if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({ type: 'logout', username }));
-            }
+        ws.onerror = () => {
+            // Feedbacks failed to connect to live server
+            alert("Error: Unable to connect to server");
+        }
+
+        ws.onclose = () => {
+            // Logs out account
+            console.log("Logging out account");
             navigator.sendBeacon('../backend/logout.php'); // fallback server logout
-        });
+        }
+    }
+
+    function redirect(ws){
+        // ws.close();
+        if (role === "admin"){
+            window.location.href = "game_admin.html";
+        }else if (role === "user"){
+            // go to game_client.html
+            window.location.href = "game_client.html";
+        }else{
+            // Something went wrong
+            console.log("Something went wrong");
+        }
     }
 </script>

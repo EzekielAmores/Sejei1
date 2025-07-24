@@ -25,9 +25,8 @@ wss.on('connection', (ws) => {
     ws.on('message', (msg) => {
         const data = JSON.parse(msg);
 
-        // Handles login actions
-        if (data.type === 'login') {
-            console.log(`${data.username} connected`);
+        if (data.type === 'login'){
+            console.log(`${data.username} connected to game server`);
         }
 
         // Handles logout actions

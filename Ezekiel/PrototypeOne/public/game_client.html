@@ -2,8 +2,63 @@
 
 <!-- Check if live server is on -->
 
-<p id="no_id">This is client</p>
+<p>This is client 1</p>
+
+<div>Your username is: <span id="userDisplay"></span></div>
+
+<button onclick="logoutUser()">LOG OUT</button>
 
 <script>
-    // script
+    let ws;
+    let username;
+    let user_id;
+
+    let shouldTriggerUnload = true; // In case 'beforeunload' will trigger when button clicking leave site
+
+    fetch('../backend/get_user.php', {
+        method: 'GET',
+        credentials: 'include' // This sends the session cookie!
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Session user:", data.username);
+
+        username = data.username;
+        connectSocket();
+        // You can now use data.role in your JavaScript
+        document.getElementById('userDisplay').innerText = data.username;
+    });
+
+    function connectSocket() {
+        ws = new WebSocket('ws://localhost:8080');
+
+        // _ws = ws;
+
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ type: 'login', username })); // Sends feedback to server that you've logged in
+        };
+
+        window.addEventListener('beforeunload', () => {
+            // Check if button click
+            if (!shouldTriggerUnload){
+                return;
+            }
+
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'logout', username }));
+            }
+            navigator.sendBeacon('../backend/logout.php'); // fallback server logout
+        });
+    }
+
+    function logoutUser() {
+        shouldTriggerUnload = false;
+
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'logout', username }));
+        }
+        navigator.sendBeacon('../backend/logout.php'); // fallback server logout
+
+        window.location.replace("login.html"); // redirect to login page
+    }
 </script>
