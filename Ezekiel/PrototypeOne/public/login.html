@@ -11,12 +11,26 @@
 <button onclick="loginUser()">LOG IN</button>
 
 <script>
+    // Get global ip
+    // const { ip_address } = require('../server/config.js');
+
     let ws; // Websocket 
     let username; // Client, Need to be transfer to new page
     let role;
 
+    // Function to log in user
     function loginUser() {
         console.log("running");
+
+        // Hard Coded Go to admin.html
+        const _username = "user"
+        const _password = "admin"
+        if (document.getElementById('username').value === _username && document.getElementById('password').value === _password){
+            alert("You entered the secret message");
+            window.location.href = "admin.html";
+            return;
+        }
+
         fetch('../backend/login.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -44,11 +58,10 @@
     // Function to connect to Node.js Server
     function connectSocket(username) {
         ws = new WebSocket('ws://localhost:8080');
-        ws.onopen = () => {
-            // redirect to game without losing the session, but how?
+        // ws = new WebSocket("ws://" + ip_address + ":8080");
 
-            // username go to next file
-            redirect(ws)
+        ws.onopen = () => {
+            redirect()
         };
 
         ws.onerror = () => {
@@ -63,8 +76,7 @@
         }
     }
 
-    function redirect(ws){
-        // ws.close();
+    function redirect(){
         if (role === "admin"){
             window.location.href = "game_admin.html";
         }else if (role === "user"){

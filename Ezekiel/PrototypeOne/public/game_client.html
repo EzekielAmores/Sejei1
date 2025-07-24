@@ -7,11 +7,16 @@
 <div>Your username is: <span id="userDisplay"></span></div>
 
 <button onclick="logoutUser()">LOG OUT</button>
+<button onclick="clickButton()">CLICK</button>
 
 <script>
+    // Get global ip
+    // const { ip_address } = require('../server/config.js');
+
     let ws;
     let username;
     let user_id;
+    let role;
 
     let shouldTriggerUnload = true; // In case 'beforeunload' will trigger when button clicking leave site
 
@@ -24,6 +29,9 @@
         console.log("Session user:", data.username);
 
         username = data.username;
+        user_id = data.user_id;
+        role = data.role;
+
         connectSocket();
         // You can now use data.role in your JavaScript
         document.getElementById('userDisplay').innerText = data.username;
@@ -31,11 +39,10 @@
 
     function connectSocket() {
         ws = new WebSocket('ws://localhost:8080');
-
-        // _ws = ws;
+        // ws = new WebSocket("ws://" + ip_address + ":8080");
 
         ws.onopen = () => {
-            ws.send(JSON.stringify({ type: 'login', username })); // Sends feedback to server that you've logged in
+            ws.send(JSON.stringify({ type: 'login', username: username, user_id: user_id, role: role})); // Sends feedback to server that you've logged in
         };
 
         window.addEventListener('beforeunload', () => {
@@ -60,5 +67,11 @@
         navigator.sendBeacon('../backend/logout.php'); // fallback server logout
 
         window.location.replace("login.html"); // redirect to login page
+    }
+
+    function clickButton() {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'client_click', username }));
+        }
     }
 </script>

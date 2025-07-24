@@ -1,2 +1,94 @@
-<!-- Student Database -->
- <!-- Edit stories -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Database Management</title>
+</head>
+<body>
+  <h1>Account and Team Manager</h1>
+
+  <h2>Create Credentials</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <input type="text" id="role" placeholder="Role">
+  <input type="number" id="cred_user_id" placeholder="User ID">
+  <button onclick="createCredentials()">Create Credentials</button>
+
+  <h2>Create User Info</h2>
+  <input type="number" id="user_id" placeholder="User ID">
+  <input type="text" id="last_name" placeholder="Last Name">
+  <input type="text" id="first_name" placeholder="First Name">
+  <input type="text" id="gender" placeholder="Gender">
+  <button onclick="createUserInfo()">Create User</button>
+
+  <h2>Create Team</h2>
+  <input type="text" id="team" placeholder="Team Name">
+  <button onclick="createTeam()">Create Team</button>
+
+  <h2>Create Player</h2>
+  <input type="number" id="player_user_id" placeholder="User ID">
+  <input type="number" id="player_team_id" placeholder="Team ID">
+  <button onclick="createPlayer()">Create Player</button>
+
+  <h2>Show Data</h2>
+  <button onclick="fetchTable('credentials')">Show Credentials</button>
+  <button onclick="fetchTable('users_info')">Show Users Info</button>
+  <button onclick="fetchTable('teams')">Show Teams</button>
+  <button onclick="fetchTable('players')">Show Players</button>
+  <button onclick="fetchAllPlayerInfo()">Show All Player Info</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    function postData(url, data) {
+      return fetch(`../backend/create/${url}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams(data)
+      }).then(res => res.text());
+    }
+
+    function createCredentials() {
+      postData('create_credentials.php', {
+        username: username.value,
+        password: password.value,
+        role: role.value,
+        user_id: cred_user_id.value
+      }).then(alert);
+    }
+
+    function createUserInfo() {
+      postData('create_user_info.php', {
+        user_id: user_id.value,
+        last_name: last_name.value,
+        first_name: first_name.value,
+        gender: gender.value
+      }).then(alert);
+    }
+
+    function createTeam() {
+      postData('create_team.php', {
+        team: team.value
+      }).then(alert);
+    }
+
+    function createPlayer() {
+      postData('create_player.php', {
+        user_id: player_user_id.value,
+        team_id: player_team_id.value
+      }).then(alert);
+    }
+
+    function fetchTable(name) {
+      fetch(`../backend/get/get_${name}.php`)
+        .then(res => res.text())
+        .then(data => output.textContent = data);
+    }
+
+    function fetchAllPlayerInfo() {
+      fetch('../backend/get/get_all_player_info.php')
+        .then(res => res.text())
+        .then(data => output.textContent = data);
+    }
+  </script>
+</body>
+</html>

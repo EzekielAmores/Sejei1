@@ -1,0 +1,21 @@
+[2025-07-24 13:20:46] GET USER LOG
+session username: 1
+json session: {"session_id":"3hmpohj7aaha3a88rtftga87v3","session_username":"admin","all_session_data":{"username":"admin","user_id":1,"role":"admin"}}
+[2025-07-24 13:21:49] GET USER LOG
+session username: 1
+json session: {"session_id":"j8et63tgbugjeuh4us0m6jbuk1","session_username":"bob","all_session_data":{"username":"bob","user_id":3,"role":"user"}}
+[2025-07-24 13:31:05] GET USER LOG
+session username: 1
+json session: {"session_id":"3hmpohj7aaha3a88rtftga87v3","session_username":"admin","all_session_data":{"username":"admin","user_id":1,"role":"admin"}}
+[2025-07-24 13:31:13] GET USER LOG
+session username: 1
+json session: {"session_id":"j8et63tgbugjeuh4us0m6jbuk1","session_username":"bob","all_session_data":{"username":"bob","user_id":3,"role":"user"}}
+[2025-07-24 13:38:19] GET USER LOG
+session username: 1
+json session: {"session_id":"3hmpohj7aaha3a88rtftga87v3","session_username":"admin","all_session_data":{"username":"admin","user_id":1,"role":"admin"}}
+[2025-07-24 13:38:25] GET USER LOG
+session username: 1
+json session: {"session_id":"j8et63tgbugjeuh4us0m6jbuk1","session_username":"bob","all_session_data":{"username":"bob","user_id":3,"role":"user"}}
+[2025-07-24 13:39:02] GET USER LOG
+session username: 1
+json session: {"session_id":"6bmvql9nvqmvgibrr8fvi036sj","session_username":"cj","all_session_data":{"username":"cj","user_id":6,"role":"user"}}

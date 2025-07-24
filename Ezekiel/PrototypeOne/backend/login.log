@@ -1,0 +1,132 @@
+[2025-07-24 13:18:37] LOGIN LOG
+username: admin
+password: password
+Array
+(
+    [id] => 1
+    [username] => admin
+    [password] => password
+    [role] => admin
+    [user_id] => 1
+    [in_session] => 0
+)
+
+session username: admin
+session user_id: 1
+json session: {"session_id":"3hmpohj7aaha3a88rtftga87v3","session_username":"admin","all_session_data":{"username":"admin","user_id":1,"role":"admin"}}
+[2025-07-24 13:18:39] LOGIN LOG
+[2025-07-24 13:19:53] LOGIN LOG
+[2025-07-24 13:20:11] LOGIN LOG
+[2025-07-24 13:20:46] LOGIN LOG
+username: admin
+password: password
+Array
+(
+    [id] => 1
+    [username] => admin
+    [password] => password
+    [role] => admin
+    [user_id] => 1
+    [in_session] => 0
+)
+
+session username: admin
+session user_id: 1
+json session: {"session_id":"3hmpohj7aaha3a88rtftga87v3","session_username":"admin","all_session_data":{"username":"admin","user_id":1,"role":"admin"}}
+[2025-07-24 13:21:22] LOGIN LOG
+[2025-07-24 13:21:49] LOGIN LOG
+username: bob
+password: user2
+Array
+(
+    [id] => 3
+    [username] => bob
+    [password] => user2
+    [role] => user
+    [user_id] => 3
+    [in_session] => 0
+)
+
+session username: bob
+session user_id: 3
+json session: {"session_id":"j8et63tgbugjeuh4us0m6jbuk1","session_username":"bob","all_session_data":{"username":"bob","user_id":3,"role":"user"}}
+[2025-07-24 13:31:05] LOGIN LOG
+username: admin
+password: password
+Array
+(
+    [id] => 1
+    [username] => admin
+    [password] => password
+    [role] => admin
+    [user_id] => 1
+    [in_session] => 0
+)
+
+session username: admin
+session user_id: 1
+json session: {"session_id":"3hmpohj7aaha3a88rtftga87v3","session_username":"admin","all_session_data":{"username":"admin","user_id":1,"role":"admin"}}
+[2025-07-24 13:31:13] LOGIN LOG
+username: bob
+password: user2
+Array
+(
+    [id] => 3
+    [username] => bob
+    [password] => user2
+    [role] => user
+    [user_id] => 3
+    [in_session] => 0
+)
+
+session username: bob
+session user_id: 3
+json session: {"session_id":"j8et63tgbugjeuh4us0m6jbuk1","session_username":"bob","all_session_data":{"username":"bob","user_id":3,"role":"user"}}
+[2025-07-24 13:38:19] LOGIN LOG
+username: admin
+password: password
+Array
+(
+    [id] => 1
+    [username] => admin
+    [password] => password
+    [role] => admin
+    [user_id] => 1
+    [in_session] => 0
+)
+
+session username: admin
+session user_id: 1
+json session: {"session_id":"3hmpohj7aaha3a88rtftga87v3","session_username":"admin","all_session_data":{"username":"admin","user_id":1,"role":"admin"}}
+[2025-07-24 13:38:25] LOGIN LOG
+username: bob
+password: user2
+Array
+(
+    [id] => 3
+    [username] => bob
+    [password] => user2
+    [role] => user
+    [user_id] => 3
+    [in_session] => 0
+)
+
+session username: bob
+session user_id: 3
+json session: {"session_id":"j8et63tgbugjeuh4us0m6jbuk1","session_username":"bob","all_session_data":{"username":"bob","user_id":3,"role":"user"}}
+[2025-07-24 13:39:02] LOGIN LOG
+username: cj
+password: user5
+Array
+(
+    [id] => 6
+    [username] => cj
+    [password] => user5
+    [role] => user
+    [user_id] => 6
+    [in_session] => 0
+)
+
+session username: cj
+session user_id: 6
+json session: {"session_id":"6bmvql9nvqmvgibrr8fvi036sj","session_username":"cj","all_session_data":{"username":"cj","user_id":6,"role":"user"}}

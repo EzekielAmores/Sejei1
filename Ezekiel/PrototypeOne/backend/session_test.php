@@ -12,3 +12,5 @@ if (!isset($_SESSION['visit_count'])) {
 echo "<h1>PHP Session Test</h1>";
 echo "<p><strong>Session ID:</strong> " . session_id() . "</p>";
 echo "<p><strong>Visit Count (in this session):</strong> " . $_SESSION['visit_count'] . "</p>";
+
+session_destroy();

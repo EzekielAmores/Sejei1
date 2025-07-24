@@ -8,6 +8,12 @@ $timestamp = date('Y-m-d H:i:s'); // Format: 2025-07-24 14:35:00
 $logEntry = "[$timestamp] LOGIN LOG\n";
 file_put_contents($logFile, $logEntry, FILE_APPEND);
 
+// CHECK IF SESSION ALREADY EXIST BY IT'S USERNAME
+if (isset($_SESSION['username'])) {
+    echo json_encode(['error' => 'Session already Exist']);
+    exit;
+}
+
 $username = $_POST['username'] ?? '';
 $password = $_POST['password'] ?? '';
 
@@ -38,6 +44,7 @@ if ($user = $result->fetch_assoc()){
         // Adds user and id to session. Still don't know about session
         $_SESSION['username'] = $user['username'];
         $_SESSION['user_id'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
 
         file_put_contents($logFile, "session username: " . $_SESSION['username'] . "\n", FILE_APPEND);
         file_put_contents($logFile, "session user_id: " . $_SESSION['user_id'] . "\n", FILE_APPEND);

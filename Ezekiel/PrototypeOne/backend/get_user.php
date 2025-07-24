@@ -18,7 +18,7 @@ file_put_contents($logFile, "json session: " . $json . "\n", FILE_APPEND);
 
 
 if (isset($_SESSION['username'])) {
-    echo json_encode(["username" => $_SESSION['username']]);
+    echo json_encode(["username" => $_SESSION['username'], "user_id" => $_SESSION['user_id'], "role" => $_SESSION['role']]);
 } else {
-    echo json_encode(["username" => null]);
+    echo json_encode(["username" => null, "user_id" => null, "role" => null]);
 }
