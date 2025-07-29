@@ -1,0 +1,71 @@
+2025-07-28 23:27:06 5820 [Note] InnoDB: innodb_empty_free_list_algorithm has been changed to legacy because of small buffer pool size. In order to use backoff, increase buffer pool at least up to 20MB.
+
+2025-07-28 23:27:06 5820 [Note] InnoDB: Using mutexes to ref count buffer pool pages
+2025-07-28 23:27:06 5820 [Note] InnoDB: The InnoDB memory heap is disabled
+2025-07-28 23:27:06 5820 [Note] InnoDB: Mutexes and rw_locks use Windows interlocked functions
+2025-07-28 23:27:06 5820 [Note] InnoDB: _mm_lfence() and _mm_sfence() are used for memory barrier
+2025-07-28 23:27:06 5820 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2025-07-28 23:27:06 5820 [Note] InnoDB: Using generic crc32 instructions
+2025-07-28 23:27:06 5820 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2025-07-28 23:27:06 5820 [Note] InnoDB: Completed initialization of buffer pool
+2025-07-28 23:27:06 5820 [Note] InnoDB: Highest supported file format is Barracuda.
+2025-07-28 23:27:06 5820 [Note] InnoDB: 128 rollback segment(s) are active.
+2025-07-28 23:27:06 5820 [Note] InnoDB: Waiting for purge to start
+2025-07-28 23:27:06 5820 [Note] InnoDB:  Percona XtraDB (http://www.percona.com) 5.6.49-89.0 started; log sequence number 1616703
+2025-07-28 23:27:06 5820 [Note] Plugin 'FEEDBACK' is disabled.
+2025-07-28 23:27:06 10300 [Note] InnoDB: Dumping buffer pool(s) not yet started
+2025-07-28 23:27:06 5820 [Note] Server socket created on IP: '::'.
+2025-07-28 23:27:06 5820 [Note] C:\Users\ezeki\Desktop\GitHub\Sejei1\Ezekiel\PrototypeTwo\mariadb-10.1.48-winx64\bin\mysqld.exe: ready for connections.
+Version: '10.1.48-MariaDB'  socket: ''  port: 3306  mariadb.org binary distribution
+2025-07-28 23:29:35 6980 [Note] C:\Users\ezeki\Desktop\GitHub\Sejei1\Ezekiel\PrototypeTwo\mariadb-10.1.48-winx64\bin\mysqld.exe: Normal shutdown
+2025-07-28 23:29:35 6980 [Note] Event Scheduler: Purging the queue. 0 events
+2025-07-28 23:29:35 10348 [Note] InnoDB: FTS optimize thread exiting.
+2025-07-28 23:29:35 6980 [Note] InnoDB: Starting shutdown...
+2025-07-28 23:29:35 6980 [Note] InnoDB: Waiting for page_cleaner to finish flushing of buffer pool
+2025-07-28 23:29:36 6980 [Note] InnoDB: Shutdown completed; log sequence number 1616713
+2025-07-28 23:29:36 6980 [Note] C:\Users\ezeki\Desktop\GitHub\Sejei1\Ezekiel\PrototypeTwo\mariadb-10.1.48-winx64\bin\mysqld.exe: Shutdown complete
+
+2025-07-28 23:33:09 7528 [Note] InnoDB: innodb_empty_free_list_algorithm has been changed to legacy because of small buffer pool size. In order to use backoff, increase buffer pool at least up to 20MB.
+
+2025-07-28 23:33:09 7528 [Note] InnoDB: Using mutexes to ref count buffer pool pages
+2025-07-28 23:33:09 7528 [Note] InnoDB: The InnoDB memory heap is disabled
+2025-07-28 23:33:09 7528 [Note] InnoDB: Mutexes and rw_locks use Windows interlocked functions
+2025-07-28 23:33:09 7528 [Note] InnoDB: _mm_lfence() and _mm_sfence() are used for memory barrier
+2025-07-28 23:33:09 7528 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2025-07-28 23:33:09 7528 [Note] InnoDB: Using generic crc32 instructions
+2025-07-28 23:33:09 7528 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2025-07-28 23:33:09 7528 [Note] InnoDB: Completed initialization of buffer pool
+2025-07-28 23:33:09 7528 [Note] InnoDB: Highest supported file format is Barracuda.
+2025-07-28 23:33:09 7528 [Note] InnoDB: 128 rollback segment(s) are active.
+2025-07-28 23:33:09 7528 [Note] InnoDB: Waiting for purge to start
+2025-07-28 23:33:09 7528 [Note] InnoDB:  Percona XtraDB (http://www.percona.com) 5.6.49-89.0 started; log sequence number 1616713
+2025-07-28 23:33:09 7528 [Note] Plugin 'FEEDBACK' is disabled.
+2025-07-28 23:33:09 14524 [Note] InnoDB: Dumping buffer pool(s) not yet started
+2025-07-28 23:33:09 7528 [Note] Server socket created on IP: '::'.
+2025-07-28 23:33:09 7528 [Note] C:\Users\ezeki\Desktop\GitHub\Sejei1\Ezekiel\PrototypeTwo\mariadb-10.1.48-winx64\bin\mysqld.exe: ready for connections.
+Version: '10.1.48-MariaDB'  socket: ''  port: 3306  mariadb.org binary distribution
+2025-07-29  0:02:26 6080 [Note] C:\Users\ezeki\Desktop\GitHub\Sejei1\Ezekiel\PrototypeTwo\mariadb-10.1.48-winx64\bin\mysqld.exe: Normal shutdown
+2025-07-29  0:02:26 6080 [Note] Event Scheduler: Purging the queue. 0 events
+2025-07-29  0:02:26 11356 [Note] InnoDB: FTS optimize thread exiting.
+2025-07-29  0:02:26 6080 [Note] InnoDB: Starting shutdown...
+2025-07-29  0:02:26 6080 [Note] InnoDB: Waiting for page_cleaner to finish flushing of buffer pool
+2025-07-29  0:02:27 6080 [Note] InnoDB: Shutdown completed; log sequence number 1616723
+2025-07-29  0:02:27 6080 [Note] C:\Users\ezeki\Desktop\GitHub\Sejei1\Ezekiel\PrototypeTwo\mariadb-10.1.48-winx64\bin\mysqld.exe: Shutdown complete
+
+2025-07-29  8:34:36 12692 [Note] InnoDB: innodb_empty_free_list_algorithm has been changed to legacy because of small buffer pool size. In order to use backoff, increase buffer pool at least up to 20MB.
+
+2025-07-29  8:34:36 12692 [Note] InnoDB: Using mutexes to ref count buffer pool pages
+2025-07-29  8:34:36 12692 [Note] InnoDB: The InnoDB memory heap is disabled
+2025-07-29  8:34:36 12692 [Note] InnoDB: Mutexes and rw_locks use Windows interlocked functions
+2025-07-29  8:34:36 12692 [Note] InnoDB: _mm_lfence() and _mm_sfence() are used for memory barrier
+2025-07-29  8:34:36 12692 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2025-07-29  8:34:36 12692 [Note] InnoDB: Using generic crc32 instructions
+2025-07-29  8:34:36 12692 [Note] InnoDB: Initializing buffer pool, size = 128.0M
+2025-07-29  8:34:36 12692 [Note] InnoDB: Completed initialization of buffer pool
+2025-07-29  8:34:36 12692 [Note] InnoDB: Highest supported file format is Barracuda.
+2025-07-29  8:34:36 12692 [Note] InnoDB: 128 rollback segment(s) are active.
+2025-07-29  8:34:36 12692 [Note] InnoDB: Waiting for purge to start
+2025-07-29  8:34:36 12692 [Note] InnoDB:  Percona XtraDB (http://www.percona.com) 5.6.49-89.0 started; log sequence number 1616743
+2025-07-29  8:34:36 12692 [Note] Plugin 'FEEDBACK' is disabled.
+2025-07-29  8:34:36 11944 [Note] InnoDB: Dumping buffer pool(s) not yet started
+2025-07-29  8:34:36 12692 [Note] Server socket created on IP: '::'.

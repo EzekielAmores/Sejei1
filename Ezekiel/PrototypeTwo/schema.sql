@@ -1,0 +1,9 @@
+-- I need a schema for all the databases needed, and also placeholder names, stories and questions
+
+CREATE DATABASE IF NOT EXISTS game;
+USE game;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE
+);

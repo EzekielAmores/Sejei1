@@ -130,3 +130,48 @@ Array
 session username: cj
 session user_id: 6
 json session: {"session_id":"6bmvql9nvqmvgibrr8fvi036sj","session_username":"cj","all_session_data":{"username":"cj","user_id":6,"role":"user"}}
+[2025-07-29 08:11:10] LOGIN LOG
+username: admin
+password: adminpass
+Array
+(
+    [id] => 1
+    [username] => admin
+    [password] => password
+    [role] => admin
+    [user_id] => 1
+    [in_session] => 0
+)
+
+[2025-07-29 08:11:15] LOGIN LOG
+username: admin
+password: password
+Array
+(
+    [id] => 1
+    [username] => admin
+    [password] => password
+    [role] => admin
+    [user_id] => 1
+    [in_session] => 0
+)
+
+session username: admin
+session user_id: 1
+json session: {"session_id":"0bav08voo79dhr3b7or89n995n","session_username":"admin","all_session_data":{"username":"admin","user_id":1,"role":"admin"}}
+[2025-07-29 08:12:08] LOGIN LOG
+username: bob
+password: user2
+Array
+(
+    [id] => 3
+    [username] => bob
+    [password] => user2
+    [role] => user
+    [user_id] => 3
+    [in_session] => 0
+)
+
+session username: bob
+session user_id: 3
+json session: {"session_id":"6hd814h66achl0k7qgesga5hh2","session_username":"bob","all_session_data":{"username":"bob","user_id":3,"role":"user"}}

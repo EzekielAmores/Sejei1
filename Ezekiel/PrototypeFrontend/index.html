@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multiplayer Browser Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .tab {
+      display: none;
+      padding: 20px;
+    }
+    .tab.active {
+      display: block;
+    }
+
+    /* 4 player screen */
+    .four-columns {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100%;
+    }
+
+    .player-column {
+        flex: 1;
+        border-right: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+    .player-column:last-child {
+        border-right: none;
+    }
+    /* end of 4 player screen */
+
+  </style>
+</head>
+<body>
+
+  <!-- Dice Roll Tab -->
+<div id="dice-roll-tab" class="tab active">
+  <h2>Dice Roll</h2>
+
+  <!-- Turn Order -->
+  <div id="turn-order" style="margin-bottom: 1em;">
+    <h3>Team Turn Order</h3>
+    <ul class="turn-order-list"></ul>
+  </div>
+  <div class="four-columns">
+    <div class="player-column" id="team1-dice">
+      <h3>Team 1 🎲</h3>
+      <button id="roll-btn-1" onclick="rollDice(1)">Roll Dice</button>
+      <p id="dice-display-1">Rolled: -</p>
+      <div><strong>Players:</strong>
+        <ul class="team-1-players"></ul>
+      </div>
+    </div>
+    <div class="player-column" id="team2-dice">
+      <h3>Team 2 🎲</h3>
+      <button id="roll-btn-2" onclick="rollDice(2)">Roll Dice</button>
+      <p id="dice-display-2">Rolled: -</p>
+      <div><strong>Players:</strong>
+        <ul class="team-2-players"></ul>
+      </div>
+    </div>
+    <div class="player-column" id="team3-dice">
+      <h3>Team 3 🎲</h3>
+      <button id="roll-btn-3" onclick="rollDice(3)">Roll Dice</button>
+      <p id="dice-display-3">Rolled: -</p>
+      <div><strong>Players:</strong>
+        <ul class="team-3-players"></ul>
+      </div>
+    </div>
+    <div class="player-column" id="team4-dice">
+      <h3>Team 4 🎲</h3>
+      <button id="roll-btn-4" onclick="rollDice(4)">Roll Dice</button>
+      <p id="dice-display-4">Rolled: -</p>
+      <div><strong>Players:</strong>
+        <ul class="team-4-players"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Character Selection Phase -->
+<div id="character-select-tab" class="tab">
+  <h2>Character Selection</h2>
+
+  <!-- Turn Order -->
+  <div id="turn-order" style="margin-bottom: 1em;">
+    <h3>Team Turn Order</h3>
+    <ul class="turn-order-list"></ul>
+  </div>
+
+  <!-- Four team columns -->
+  <div class="four-columns">
+    <!-- Template for each team column -->
+    <div class="player-column" id="team-1-column">
+      <h3 id="team-1-name">Team 1</h3>
+      <div>
+        <strong>Choose Character:</strong>
+        <div id="team-1-characters" class="character-buttons"></div>
+      </div>
+      <div>Selected: <span id="team-1-selected">None</span></div>
+      <div><strong>Players:</strong>
+        <ul class="team-1-players"></ul>
+      </div>
+    </div>
+
+    <div class="player-column" id="team-2-column">
+      <h3 id="team-2-name">Team 2</h3>
+      <div>
+        <strong>Choose Character:</strong>
+        <div id="team-2-characters" class="character-buttons"></div>
+      </div>
+      <div>Selected: <span id="team-2-selected">None</span></div>
+      <div><strong>Players:</strong>
+        <ul class="team-2-players"></ul>
+      </div>
+    </div>
+
+    <div class="player-column" id="team-3-column">
+      <h3 id="team-3-name">Team 3</h3>
+      <div>
+        <strong>Choose Character:</strong>
+        <div id="team-3-characters" class="character-buttons"></div>
+      </div>
+      <div>Selected: <span id="team-3-selected">None</span></div>
+      <div><strong>Players:</strong>
+        <ul class="team-3-players"></ul>
+      </div>
+    </div>
+
+    <div class="player-column" id="team-4-column">
+      <h3 id="team-4-name">Team 4</h3>
+      <div>
+        <strong>Choose Character:</strong>
+        <div id="team-4-characters" class="character-buttons"></div>
+      </div>
+      <div>Selected: <span id="team-4-selected">None</span></div>
+      <div><strong>Players:</strong>
+        <ul class="team-4-players"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Plinko Ball Game Tab -->
+  <div id="plinko-tab" class="tab">
+    <h2>Plinko Ball Game</h2>
+    <!-- Turn Order -->
+    <div id="turn-order" style="margin-bottom: 1em;">
+        <h3>Team Turn Order</h3>
+        <ul class="turn-order-list"></ul>
+    </div>
+    <div class="four-columns">
+    <!-- Loop for 4 teams -->
+        <div class="player-column" id="team1-column">
+            <h3>Team 1</h3>
+            <div class="plinko-area" id="plinko-area-team1"></div>
+            <button onclick="dropBall(1)">Drop Ball</button>
+            <div><strong>Players:</strong>
+                <ul class="team-1-players"></ul>
+            </div>
+        </div>
+        <div class="player-column" id="team2-column">
+            <h3>Team 2</h3>
+            <div class="plinko-area" id="plinko-area-team2"></div>
+            <button onclick="dropBall(2)">Drop Ball</button>
+            <div><strong>Players:</strong>
+                <ul class="team-2-players"></ul>
+            </div>
+        </div>
+        <div class="player-column" id="team3-column">
+            <h3>Team 3</h3>
+            <div class="plinko-area" id="plinko-area-team3"></div>
+            <button onclick="dropBall(3)">Drop Ball</button>
+            <div><strong>Players:</strong>
+                <ul class="team-3-players"></ul>
+            </div>
+        </div>
+            <div class="player-column" id="team4-column">
+            <h3>Team 4</h3>
+            <div class="plinko-area" id="plinko-area-team4"></div>
+        <button onclick="dropBall(4)">Drop Ball</button>
+        <div><strong>Players:</strong>
+                <ul class="team-4-players"></ul>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Color Wheel Tab -->
+  <div id="color-wheel-tab" class="tab">
+    <h2>Color Wheel</h2>
+
+    <!-- Turn Order -->
+    <div id="turn-order" style="margin-bottom: 1em;">
+        <h3>Team Turn Order</h3>
+        <ul class="turn-order-list"></ul>
+    </div>
+    <div class="four-columns">
+        <!-- Team Columns -->
+        <div class="player-column" id="team1Wheel">
+            <h3>Team 1</h3>
+            <div class="wheel-placeholder">🎡 Placeholder for Team 1's Wheel</div>
+            <button onclick="spinWheel(1)">Spin Wheel</button>
+            <p id="team1DayResult"></p>
+            <div><strong>Players:</strong>
+                <ul class="team-1-players"></ul>
+            </div>
+        </div>
+        <div class="player-column" id="team2Wheel">
+            <h3>Team 2</h3>
+            <div class="wheel-placeholder">🎡 Placeholder for Team 2's Wheel</div>
+            <button onclick="spinWheel(2)">Spin Wheel</button>
+            <p id="team2DayResult"></p>
+            <div><strong>Players:</strong>
+                <ul class="team-2-players"></ul>
+            </div>
+        </div>
+        <div class="player-column" id="team3Wheel">
+            <h3>Team 3</h3>
+            <div class="wheel-placeholder">🎡 Placeholder for Team 3's Wheel</div>
+            <button onclick="spinWheel(3)">Spin Wheel</button>
+            <p id="team3DayResult"></p>
+            <div><strong>Players:</strong>
+                <ul class="team-3-players"></ul>
+            </div>
+        </div>
+        <div class="player-column" id="team4Wheel">
+            <h3>Team 4</h3>
+            <div class="wheel-placeholder">🎡 Placeholder for Team 4's Wheel</div>
+            <button onclick="spinWheel(4)">Spin Wheel</button>
+            <p id="team4DayResult"></p>
+            <div><strong>Players:</strong>
+                <ul class="team-4-players"></ul>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Story Tab -->
+  <div id="story-tab" class="tab">
+    <h2>Story Reading</h2>
+    <!-- Story content and 60-second timer -->
+    <div class="four-columns">
+        <!-- Four Team Story Slots -->
+        <div class="player-column" id="team1-story">
+            <h3>Team 1</h3>
+            <p><strong>Week & Day:</strong> <span class="story-id"></span></p>
+            <h4 class="story-title"></h4>
+            <p class="story-body"></p>
+            <p>⏳ Time Left: <span class="timer">60</span>s</p>
+        </div>
+        <div class="player-column" id="team2-story">
+            <h3>Team 2</h3>
+            <p><strong>Week & Day:</strong> <span class="story-id"></span></p>
+            <h4 class="story-title"></h4>
+            <p class="story-body"></p>
+            <p>⏳ Time Left: <span class="timer">60</span>s</p>
+        </div>
+        <div class="player-column" id="team3-story">
+            <h3>Team 3</h3>
+            <p><strong>Week & Day:</strong> <span class="story-id"></span></p>
+            <h4 class="story-title"></h4>
+            <p class="story-body"></p>
+            <p>⏳ Time Left: <span class="timer">60</span>s</p>
+        </div>
+        <div class="player-column" id="team4-story">
+            <h3>Team 4</h3>
+            <p><strong>Week & Day:</strong> <span class="story-id"></span></p>
+            <h4 class="story-title"></h4>
+            <p class="story-body"></p>
+            <p>⏳ Time Left: <span class="timer">60</span>s</p>
+        </div>
+    </div>
+  </div>
+
+  <!-- Question Tab -->
+  <div id="question-tab" class="tab">
+    <h2>Question Time</h2>
+    <!-- Multiple choice buttons and feedback -->
+    <div class="four-columns">
+        <!-- One column per team -->
+        <div class="player-column" id="team1-question"></div>
+        <div class="player-column" id="team2-question"></div>
+        <div class="player-column" id="team3-question"></div>
+        <div class="player-column" id="team4-question"></div>
+    </div>
+  </div>
+
+  <!-- Add future UI like scoreboards, admin panel, etc. -->
+  
+  <!-- Data script -->
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game Lobby</title>
+</head>
+<body>
+  <h2>Enter Player Name</h2>
+  <input id="playerName" />
+  <button onclick="submitName()">Submit</button>
+  <p id="response"></p>
+
+  <h3>Server Status</h3>
+  <ul>
+    <li>MySQL: <span id="mysqlStatus">Checking...</span></li>
+    <li>PHP: <span id="phpStatus">Checking...</span></li>
+    <li>Node.js: <span id="nodeStatus">Checking...</span></li>
+  </ul>
+
+  <script>
+    function submitName() {
+      const name = document.getElementById('playerName').value;
+      fetch('submit.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'name=' + encodeURIComponent(name)
+      })
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById('response').innerText = data;
+      });
+    }
+
+    function checkStatus(endpoint, elementId) {
+      fetch(endpoint)
+        .then(res => res.ok ? "Online" : "Offline")
+        .catch(() => "Offline")
+        .then(status => document.getElementById(elementId).innerText = status);
+    }
+
+    checkStatus('http://localhost:3000/status', 'nodeStatus');
+    fetch('servers_status.php')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('phpStatus').innerText = data.php;
+            document.getElementById('mysqlStatus').innerText = data.mysql;
+        })
+        .catch(() => {
+            document.getElementById('phpStatus').innerText = 'Offline';
+            document.getElementById('mysqlStatus').innerText = 'Offline';
+        });
+  </script>
+</body>
+</html>

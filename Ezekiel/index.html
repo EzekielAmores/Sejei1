@@ -1,0 +1,120 @@
+<!-- La ko ka sabot sa code tangia -->
+ <!-- about ni siya sa pag wheel spin -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spin the Color Wheel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    #wheel {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 10px solid #444;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      transform: rotate(0deg);
+      transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    .segment {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0% 0%;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+    }
+
+    #spinBtn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    #pointer {
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 30px solid black;
+      margin: 0 auto;
+      position: relative;
+      top: -20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Spin the Wheel</h1>
+  <div id="pointer"></div>
+  <div id="wheel"></div>
+  <button id="spinBtn">Spin</button>
+
+  <script>
+    const allColors = ['Red', 'Green', 'Blue', 'Yellow', 'Purple', 'Orange'];
+    let currentColors = [...allColors];
+    const wheel = document.getElementById('wheel');
+    const spinBtn = document.getElementById('spinBtn');
+    let totalRotation = 0;
+
+    function drawWheel(colors) {
+      wheel.innerHTML = '';
+      const angle = 360 / colors.length;
+
+      colors.forEach((color, i) => {
+        const segment = document.createElement('div');
+        segment.className = 'segment';
+        segment.style.backgroundColor = color.toLowerCase();
+        segment.style.transform = `rotate(${i * angle}deg) skewY(${90 - angle}deg)`;
+        wheel.appendChild(segment);
+      });
+    }
+
+    function spinWheel() {
+      if (currentColors.length === 0) {
+        alert("All colors have been selected!");
+        return;
+      }
+
+      const segmentCount = currentColors.length;
+      const anglePerSegment = 360 / segmentCount;
+      const selectedIndex = Math.floor(Math.random() * segmentCount);
+      const selectedColor = currentColors[selectedIndex];
+
+      // Angle to rotate so the selected segment is centered at top (0deg)
+      const targetAngle = selectedIndex * anglePerSegment + anglePerSegment / 2;
+
+      // Add full spins for animation effect
+      const spins = 5;
+      const spinTo = spins * 360 + (360 - targetAngle);
+
+      totalRotation += spinTo;
+
+      wheel.style.transition = 'transform 4s cubic-bezier(0.33, 1, 0.68, 1)';
+      wheel.style.transform = `rotate(${totalRotation}deg)`;
+
+      spinBtn.disabled = true;
+
+      setTimeout(() => {
+        alert("Selected: " + selectedColor);
+        currentColors.splice(selectedIndex, 1);
+        drawWheel(currentColors);
+        spinBtn.disabled = false;
+      }, 4200);
+    }
+
+    spinBtn.addEventListener('click', spinWheel);
+
+    drawWheel(currentColors);
+  </script>
+</body>
+</html>
