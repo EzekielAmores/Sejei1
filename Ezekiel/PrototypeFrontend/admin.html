@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Game Admin Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+      background-color: #f4f4f4;
+    }
+    h2 {
+      margin-top: 2rem;
+    }
+    .section {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .item {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+    }
+    input, textarea, select, button {
+      margin: 0.2rem 0;
+      padding: 0.4rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      width: auto;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Admin Panel</h1>
+
+  <!-- Teams Section -->
+  <div class="section">
+    <h2>Teams</h2>
+    <div id="teamsList"></div>
+    <h3>Add Team</h3>
+    <input type="text" id="newTeamName" placeholder="Team Name" />
+    <button onclick="addTeam()">Add Team</button>
+  </div>
+
+  <!-- Players Section -->
+  <div class="section">
+    <h2>Players</h2>
+    <div id="playersList"></div>
+    <h3>Add Player</h3>
+    <input type="text" id="newPlayerName" placeholder="Player Name" />
+    <select id="newPlayerTeam"></select>
+    <button onclick="addPlayer()">Add Player</button>
+  </div>
+
+  <!-- Stories Section -->
+  <div class="section">
+    <h2>Stories</h2>
+    <div id="storiesList"></div>
+    <h3>Add Story</h3>
+    <input type="text" id="newStoryId" placeholder="Story ID (e.g., w1d6)" />
+    <input type="text" id="newStoryTitle" placeholder="Title" />
+    <textarea id="newStoryContent" rows="4" placeholder="Story content"></textarea>
+    <button onclick="addStory()">Add Story</button>
+  </div>
+
+  <!-- Questions Section -->
+  <div class="section">
+    <h2>Questions</h2>
+    <div id="questionsList"></div>
+    <h3>Add Question</h3>
+    <select id="questionStoryId"></select>
+    <input type="text" id="questionText" placeholder="Question" />
+    <input type="text" id="option1" placeholder="Option 1" />
+    <input type="text" id="option2" placeholder="Option 2" />
+    <input type="text" id="option3" placeholder="Option 3" />
+    <input type="text" id="option4" placeholder="Option 4" />
+    <input type="text" id="correctAnswer" placeholder="Correct Answer (must match one option)" />
+    <button onclick="addQuestion()">Add Question</button>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    // === Rendering ===
+    function renderTeams() {
+      const container = document.getElementById("teamsList");
+      container.innerHTML = "";
+      teams.forEach((team, i) => {
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <strong>${team.teamName}</strong> (ID: ${team.teamId})
+          <button onclick="deleteTeam(${i})">Delete</button>
+        `;
+        container.appendChild(el);
+      });
+
+      // Populate team select for player section
+      const teamSelect = document.getElementById("newPlayerTeam");
+      teamSelect.innerHTML = "";
+      teams.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t.teamId;
+        opt.innerText = t.teamName;
+        teamSelect.appendChild(opt);
+      });
+    }
+
+    function renderPlayers() {
+      const container = document.getElementById("playersList");
+      container.innerHTML = "";
+      players.forEach((player, i) => {
+        const teamName = teams.find(t => t.teamId === player.teamId)?.teamName || "Unknown";
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          ${player.name} (ID: ${player.id}) - ${teamName}
+          <button onclick="deletePlayer(${i})">Delete</button>
+        `;
+        container.appendChild(el);
+      });
+    }
+
+    function renderStories() {
+      const container = document.getElementById("storiesList");
+      container.innerHTML = "";
+      stories.forEach((story, i) => {
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <strong>${story.id}:</strong> ${story.title}<br>
+          <em>${story.content.substring(0, 100)}...</em><br>
+          <button onclick="deleteStory(${i})">Delete</button>
+        `;
+        container.appendChild(el);
+      });
+
+      // Update story dropdown in questions section
+      const storySelect = document.getElementById("questionStoryId");
+      storySelect.innerHTML = "";
+      stories.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s.id;
+        opt.innerText = `${s.id} - ${s.title}`;
+        storySelect.appendChild(opt);
+      });
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById("questionsList");
+      container.innerHTML = "";
+      questions.forEach((q, i) => {
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          [${q.id}] ${q.question} (Story: ${q.storyId})<br>
+          A: ${q.options[0]} | B: ${q.options[1]} | C: ${q.options[2]} | D: ${q.options[3]}<br>
+          Correct: <strong>${q.answer}</strong>
+          <button onclick="deleteQuestion(${i})">Delete</button>
+        `;
+        container.appendChild(el);
+      });
+    }
+
+    // === Add Functions ===
+    function addTeam() {
+      const name = document.getElementById("newTeamName").value.trim();
+      if (!name) return alert("Enter team name.");
+      const newId = teams.length ? Math.max(...teams.map(t => t.teamId)) + 1 : 1;
+      teams.push({ teamId: newId, teamName: name, score: 0, players: [] });
+      renderTeams();
+    }
+
+    function addPlayer() {
+      const name = document.getElementById("newPlayerName").value.trim();
+      const teamId = parseInt(document.getElementById("newPlayerTeam").value);
+      if (!name || !teamId) return alert("Enter player name and team.");
+      const newId = players.length ? Math.max(...players.map(p => p.id)) + 1 : 1;
+      players.push({ id: newId, name, teamId, progress: {} });
+      const team = teams.find(t => t.teamId === teamId);
+      if (team) team.players.push(newId);
+      renderPlayers();
+    }
+
+    function addStory() {
+      const id = document.getElementById("newStoryId").value.trim();
+      const title = document.getElementById("newStoryTitle").value.trim();
+      const content = document.getElementById("newStoryContent").value.trim();
+      if (!id || !title || !content) return alert("Fill in all story fields.");
+      stories.push({ id, title, content, questions: [] });
+      renderStories();
+    }
+
+    function addQuestion() {
+      const storyId = document.getElementById("questionStoryId").value;
+      const question = document.getElementById("questionText").value.trim();
+      const options = [
+        document.getElementById("option1").value.trim(),
+        document.getElementById("option2").value.trim(),
+        document.getElementById("option3").value.trim(),
+        document.getElementById("option4").value.trim()
+      ];
+      const answer = document.getElementById("correctAnswer").value.trim();
+      if (!question || options.includes("") || !answer) return alert("Complete all fields.");
+      const newId = questions.length ? Math.max(...questions.map(q => q.id)) + 1 : 101;
+      questions.push({ id: newId, storyId, question, options, answer });
+      const story = stories.find(s => s.id === storyId);
+      if (story) story.questions.push(newId);
+      renderQuestions();
+    }
+
+    // === Delete Functions ===
+    function deleteTeam(index) {
+      if (confirm("Delete this team?")) teams.splice(index, 1);
+      renderTeams();
+    }
+
+    function deletePlayer(index) {
+      if (confirm("Delete this player?")) players.splice(index, 1);
+      renderPlayers();
+    }
+
+    function deleteStory(index) {
+      if (confirm("Delete this story?")) stories.splice(index, 1);
+      renderStories();
+    }
+
+    function deleteQuestion(index) {
+      if (confirm("Delete this question?")) questions.splice(index, 1);
+      renderQuestions();
+    }
+
+    // === Init ===
+    renderTeams();
+    renderPlayers();
+    renderStories();
+    renderQuestions();
+  </script>
+</body>
+</html>

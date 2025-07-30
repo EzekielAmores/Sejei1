@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multiplayer Browser Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .tab {
+      display: none;
+      padding: 20px;
+    }
+    .tab.active {
+      display: block;
+    }
+
+    /* 4 player screen */
+    .four-columns {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100%;
+    }
+
+    .player-column {
+        flex: 1;
+        border-right: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+    .player-column:last-child {
+        border-right: none;
+    }
+    /* end of 4 player screen */
+
+  </style>
+</head>
+<body>
+
+  <!-- Dice Roll Tab -->
+<div id="dice-roll-tab" class="tab active">
+    <h2>Dice Roll</h2>
+
+    <!-- Turn Order -->
+    <div id="turn-order" style="margin-bottom: 1em;">
+        <h3>Team Turn Order</h3>
+        <ul class="turn-order-list"></ul>
+    </div>
+
+    <div class="player-column" id="team1-dice">
+        <h3>Team 1 🎲</h3>
+        <button id="roll-btn-1" onclick="rollDice(1)">Roll Dice</button>
+        <p id="dice-display-1">Rolled: -</p>
+        <div><strong>Players:</strong>
+            <ul class="team-1-players"></ul>
+        </div>
+        <button id="roll-btn-1" onclick="showTab('character-select-tab')">Switch Tab</button>
+    </div>
+</div>
+
+  <!-- Character Selection Phase -->
+<div id="character-select-tab" class="tab">
+    <h2>Character Selection</h2>
+
+    <!-- Turn Order -->
+    <div id="turn-order" style="margin-bottom: 1em;">
+        <h3>Team Turn Order</h3>
+        <ul class="turn-order-list"></ul>
+    </div>
+
+    <!-- Template for each team column -->
+    <div class="player-column" id="team-1-column">
+        <h3 id="team-1-name">Team 1</h3>
+        <div>
+            <strong>Choose Character:</strong>
+            <div id="team-1-characters" class="character-buttons"></div>
+        </div>
+        <div>Selected: <span id="team-1-selected">None</span></div>
+        <div><strong>Players:</strong>
+            <ul class="team-1-players"></ul>
+        </div>
+        <button id="roll-btn-1" onclick="showTab('plinko-tab')">Switch Tab</button>
+    </div>
+</div>
+
+  <!-- Plinko Ball Game Tab -->
+  <div id="plinko-tab" class="tab">
+    <h2>Plinko Ball Game</h2>
+    <!-- Turn Order -->
+    <div id="turn-order" style="margin-bottom: 1em;">
+        <h3>Team Turn Order</h3>
+        <ul class="turn-order-list"></ul>
+    </div>
+
+    <div class="player-column" id="team1-column">
+        <h3>Team 1</h3>
+        <!-- Inside each team's column -->
+        <div id="score-team1" class="score-display">Score: 0</div>
+        <div class="plinko-area" id="plinko-area-team1"></div>
+        <button onclick="dropBall(1)">Drop Ball</button>
+        <div><strong>Players:</strong>
+            <ul class="team-1-players"></ul>
+        </div>
+        <button id="roll-btn-1" onclick="showTab('color-wheel-tab')">Switch Tab</button>
+    </div>
+  </div>
+
+  <!-- Color Wheel Tab -->
+  <div id="color-wheel-tab" class="tab">
+    <h2>Color Wheel</h2>
+
+    <!-- Turn Order -->
+    <div id="turn-order" style="margin-bottom: 1em;">
+        <h3>Team Turn Order</h3>
+        <ul class="turn-order-list"></ul>
+    </div>
+
+    <!-- Team Columns -->
+    <div class="player-column" id="team1Wheel">
+        <h3>Team 1</h3>
+        <div class="wheel-placeholder">🎡 Placeholder for Team 1's Wheel</div>
+        <button onclick="spinWheel(1)">Spin Wheel</button>
+        <p id="team1DayResult"></p>
+        <div><strong>Players:</strong>
+            <ul class="team-1-players"></ul>
+        </div>
+        <button id="roll-btn-1" onclick="showTab('story-tab')">Switch Tab</button>
+    </div>
+</div>
+
+  <!-- Story Tab -->
+  <div id="story-tab" class="tab">
+    <h2>Story Reading</h2>
+    <!-- Story content and 60-second timer -->
+    <!-- Four Team Story Slots -->
+    <div class="player-column" id="team1-story">
+        <h3>Team 1</h3>
+        <p><strong>Week & Day:</strong> <span class="story-id"></span></p>
+        <h4 class="story-title"></h4>
+        <p class="story-body"></p>
+        <p>⏳ Time Left: <span class="timer">60</span>s</p>
+        <button id="roll-btn-1" onclick="showTab('question-tab')">Switch Tab</button>
+    </div>
+  </div>
+
+  <!-- Question Tab -->
+    <div id="question-tab" class="tab">
+        <h2>Question Time</h2>
+        <!-- Multiple choice buttons and feedback -->
+        <div class="player-column" id="team1-question"></div>
+        <button id="roll-btn-1" onclick="showTab('dice-roll-tab')">Switch Tab</button>
+    </div>
+
+  <!-- Add future UI like scoreboards, admin panel, etc. -->
+  
+  <!-- Data script -->
+  <script src="data.js"></script>
+  <script>
+    function showTab(tabId) {
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.classList.remove("active");
+        });
+        document.getElementById(tabId).classList.add("active");
+
+        startTab(tabId);
+    }
+  </script>
+</body>
+</html>

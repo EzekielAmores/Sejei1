@@ -245,6 +245,9 @@ function renderCharacterButtons() {
 function startPlinkoTab(){
     renderPlayersPerTeam(2);
     renderTurnOrder(2);
+
+    // Revert back to zero
+    currentTurnIndex = 0;
 }
 
 function dropBall(teamId) {
@@ -301,6 +304,12 @@ function startColorWheelTab(){
     console.log('color wheel');
     renderPlayersPerTeam(3);
     renderTurnOrder(3);
+
+    currentColorWheelTurn = 0;
+
+    for (let teamId = 1; teamId <= 4; teamId++) {
+      document.getElementById(`team${teamId}DayResult`).textContent = ``;
+    }
 }
 
 function spinWheel(teamId) {
@@ -400,6 +409,10 @@ function checkAllTimersDone() {
 
 function startQuestionTab(){
     loadTeamQuestions();
+
+    for (let teamId = 1; teamId <= 4; teamId++) {
+      teamAnswers[teamId] = [];
+    }
 }
 
 function loadTeamQuestions() {
@@ -424,7 +437,10 @@ function loadTeamQuestions() {
         <h4>Q${qIndex + 1}: ${q.question}</h4>
         <div>
           ${q.options.map(option => `
-            <button class="btn btn-outline-primary mb-1" onclick="selectAnswer(${teamId}, '${q.id}', '${option}', ${qIndex})">
+            <button class="btn btn-outline-primary mb-1" 
+            data-team="${teamId}"
+            data-question="${q.id}"
+            onclick="selectAnswer(${teamId}, '${q.id}', '${option}', ${qIndex})">
               ${option}
             </button>
           `).join('')}
@@ -447,13 +463,68 @@ function loadTeamQuestions() {
 function selectAnswer(teamId, questionId, selected, qIndex) {
   const question = questions.find(q => q.id == questionId);
   const isCorrect = selected === question.answer;
+
   teamAnswers[teamId].push({ questionId, selected, isCorrect });
+
+  if (isCorrect){
+    const team = teams.find(team => team.teamId === teamId);
+    team.score += 1;
+  }
+
+  // Disable all buttons for this team and question
+  const buttons = document.querySelectorAll(
+    `button[data-team="${teamId}"][data-question="${questionId}"]`
+  );
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    btn.classList.remove('btn-outline-primary');
+    btn.classList.add('btn-secondary');
+  });
 
   const container = document.getElementById(`team${teamId}-question`);
   container.innerHTML += `
     <p class="mt-2">You selected: <strong>${selected}</strong></p>
     ${qIndex === 0 ? `<button class="btn btn-success mt-2" onclick="document.getElementById('team${teamId}-question').nextQuestion()">Next Question</button>` : `<p class="text-success">All done!</p>`}
   `;
+
+  // Check if all teams have answered their story's questions
+  if (allTeamsAnswered()) {
+    setTimeout(() => {
+      alert("All student have answered! going back to Plinko...");
+      showTab('plinko-tab');
+      displayScores();
+
+      // Reset turn order values remove redundancy
+
+    }, 1000); // short delay for UX
+  }
+}
+
+function getNumQuestionsForTeam(teamId) {
+  // Story key since I'm too lazy to make a new script
+  const week = teamWeekSelection[teamId];
+  const day = teamDaySelection[teamId];
+  const storyId = `w${week}d${day}`;
+
+  const story = stories.find(s => s.id === storyId);
+  return story ? story.questions.length : 0;
+}
+
+function allTeamsAnswered() {
+  for (let teamId = 1; teamId <= 4; teamId++) {
+    const required = getNumQuestionsForTeam(teamId);
+    const answered = teamAnswers[teamId].length;
+    if (answered < required) return false;
+  }
+  return true;
+}
+
+function displayScores() {
+  for (let teamId = 1; teamId <= 4; teamId++) {
+    const team = teams.find(team => team.teamId === teamId);
+    const score = team.score;
+    document.getElementById(`score-team${teamId}`).textContent = `Score: ${score}`;
+  }
 }
 
 // #endregion
