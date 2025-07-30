@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin</title>
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h2>Admin View</h2>
+  <div id="players"></div>
+  <button id="startBtn" style="display:none;">Start Game</button>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const socket = io('http://localhost:3000');
+
+    socket.emit("join_admin", { username: params.get("username") });
+
+    socket.on("update_players", players => {
+      document.getElementById("players").innerHTML = 
+        players.map(p => `<p>${p.username}</p>`).join("");
+    });
+
+    socket.on("enable_start", () => {
+      document.getElementById("startBtn").style.display = "block";
+    });
+
+    document.getElementById("startBtn").onclick = () => {
+      socket.emit("start_game");
+    };
+
+    socket.on("message", msg => {
+      document.getElementById("players").innerHTML += `<p>${msg}</p>`;
+    });
+  </script>
+</body>
+</html>

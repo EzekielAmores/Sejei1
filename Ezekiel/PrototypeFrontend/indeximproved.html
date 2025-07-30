@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Multiplayer Browser Game</title>
+
+  <style>
+    /* Enforce portrait orientation */
+    @media screen and (orientation: landscape) {
+      body {
+        display: none;
+      }
+      html::before {
+        content: "Please rotate your device to portrait mode 📱";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-size: 2em;
+        text-align: center;
+        padding: 1em;
+        background: #111;
+        color: white;
+      }
+    }
+
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f8fb;
+      color: #333;
+      padding: 20px;
+    }
+
+    h2, h3 {
+      color: #2e2e3a;
+    }
+
+    .tab {
+      display: none;
+    }
+
+    .tab.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .player-column {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .player-column h3 {
+      color: #5a34f0;
+    }
+
+    button {
+      padding: 14px 24px;
+      font-size: 1rem;
+      background-color: #5a34f0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #3f22a6;
+    }
+
+    ul {
+      list-style-type: none;
+      margin-top: 10px;
+    }
+
+    .character-buttons button {
+      background-color: #ff4081;
+      margin: 5px 0;
+    }
+
+    .score-display {
+      font-size: 1.5em;
+      color: #009688;
+      margin-bottom: 10px;
+    }
+
+    .wheel-placeholder {
+      background: #eee;
+      border: 2px dashed #ccc;
+      padding: 30px;
+      margin: 10px 0;
+      border-radius: 10px;
+      text-align: center;
+      color: #888;
+      font-size: 1.2em;
+    }
+
+    .timer {
+      font-weight: bold;
+      color: #e53935;
+    }
+
+    /* Responsive full width for mobile */
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Dice Roll Tab -->
+<div id="dice-roll-tab" class="tab active">
+  <h2>🎲 Dice Roll</h2>
+  <div id="turn-order">
+    <h3>Team Turn Order</h3>
+    <ul class="turn-order-list"></ul>
+  </div>
+
+  <div class="player-column" id="team1-dice">
+    <h3>Team 1</h3>
+    <button onclick="rollDice(1)">Roll Dice</button>
+    <p id="dice-display-1">Rolled: -</p>
+    <div><strong>Players:</strong>
+      <ul class="team-1-players"></ul>
+    </div>
+    <button onclick="showTab('character-select-tab')">➡️ Next: Characters</button>
+  </div>
+</div>
+
+<!-- Character Selection Phase -->
+<div id="character-select-tab" class="tab">
+  <h2>🧙 Character Selection</h2>
+  <div id="turn-order">
+    <h3>Team Turn Order</h3>
+    <ul class="turn-order-list"></ul>
+  </div>
+
+  <div class="player-column" id="team-1-column">
+    <h3 id="team-1-name">Team 1</h3>
+    <strong>Choose Character:</strong>
+    <div id="team-1-characters" class="character-buttons"></div>
+    <div>Selected: <span id="team-1-selected">None</span></div>
+    <div><strong>Players:</strong>
+      <ul class="team-1-players"></ul>
+    </div>
+    <button onclick="showTab('plinko-tab')">➡️ Next: Plinko</button>
+  </div>
+</div>
+
+<!-- Plinko Ball Game Tab -->
+<div id="plinko-tab" class="tab">
+  <h2>⚽ Plinko Ball Game</h2>
+  <div id="turn-order">
+    <h3>Team Turn Order</h3>
+    <ul class="turn-order-list"></ul>
+  </div>
+
+  <div class="player-column" id="team1-column">
+    <h3>Team 1</h3>
+    <div id="score-team1" class="score-display">Score: 0</div>
+    <div class="plinko-area" id="plinko-area-team1">🔽 Drop Zone</div>
+    <button onclick="dropBall(1)">Drop Ball</button>
+    <div><strong>Players:</strong>
+      <ul class="team-1-players"></ul>
+    </div>
+    <button onclick="showTab('color-wheel-tab')">➡️ Next: Wheel</button>
+  </div>
+</div>
+
+<!-- Color Wheel Tab -->
+<div id="color-wheel-tab" class="tab">
+  <h2>🎡 Color Wheel</h2>
+  <div id="turn-order">
+    <h3>Team Turn Order</h3>
+    <ul class="turn-order-list"></ul>
+  </div>
+
+  <div class="player-column" id="team1Wheel">
+    <h3>Team 1</h3>
+    <div class="wheel-placeholder">🎯 Placeholder for Team 1's Wheel</div>
+    <button onclick="spinWheel(1)">Spin Wheel</button>
+    <p id="team1DayResult"></p>
+    <div><strong>Players:</strong>
+      <ul class="team-1-players"></ul>
+    </div>
+    <button onclick="showTab('story-tab')">➡️ Next: Story</button>
+  </div>
+</div>
+
+<!-- Story Tab -->
+<div id="story-tab" class="tab">
+  <h2>📖 Story Time</h2>
+  <div class="player-column" id="team1-story">
+    <h3>Team 1</h3>
+    <p><strong>Week & Day:</strong> <span class="story-id"></span></p>
+    <h4 class="story-title">[Story Title]</h4>
+    <p class="story-body">[Story goes here...]</p>
+    <p>⏳ Time Left: <span class="timer">60</span>s</p>
+    <button onclick="showTab('question-tab')">➡️ Next: Questions</button>
+  </div>
+</div>
+
+<!-- Question Tab -->
+<div id="question-tab" class="tab">
+  <h2>❓ Question Time</h2>
+  <div class="player-column" id="team1-question">
+    <p>[Multiple choice question placeholder]</p>
+    <!-- MCQ buttons dynamically inserted -->
+  </div>
+  <button onclick="showTab('dice-roll-tab')">🔁 Back to Dice Roll</button>
+</div>
+
+<!-- Add future UI like scoreboard, admin panel... -->
+
+<!-- External data -->
+<script src="data.js"></script>
+<script>
+  function showTab(tabId) {
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.classList.remove("active");
+    });
+    document.getElementById(tabId).classList.add("active");
+    startTab(tabId); // optional callback
+  }
+</script>
+
+</body>
+</html>
